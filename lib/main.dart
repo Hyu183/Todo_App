@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import 'package:todo_app/config/palette.dart';
 import 'package:todo_app/dao/todo_dao.dart';
@@ -7,31 +6,98 @@ import 'package:todo_app/dto/todo_dto.dart';
 
 import 'package:todo_app/pages/homepage.dart';
 import 'package:todo_app/pages/today_list.dart';
-import 'package:todo_app/provider/todo_provider.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  List<TodoDTO> todoList = [];
+  var isLoading = true;
+  final todoDAO = TodoDAO();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    print('init');
+    super.initState();
+    loadData();
+  }
+
+  void loadData() async {
+    final todos = await todoDAO.getTodo();
+    setState(() {
+      todoList = [...todos];
+      isLoading = false;
+    });
+  }
+
+  void addTodoHandler(TodoDTO todo) async {
+    setState(() {
+      todoList.add(todo);
+    });
+    await todoDAO.insertTodo(todo);
+  }
+
+  void markTodoHandler(String id) async {
+    int oldTodoIndex = todoList.indexWhere((todo) => todo.id == id);
+    setState(() {
+      todoList[oldTodoIndex] = TodoDTO(
+          id: todoList[oldTodoIndex].id,
+          title: todoList[oldTodoIndex].title,
+          dueTime: todoList[oldTodoIndex].dueTime,
+          isDone: 1);
+    });
+    await todoDAO.markAsDone(id);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => TodoProvider(),
-      child: MaterialApp(
-        title: 'Todo',
-        theme: ThemeData(
-          primarySwatch: Palette.myColor,
-          // primaryColor: Colors.blue,
-        ),
-        home: const Homepage(),
-        routes: {
-          TodayList.routeName: (ctx) => const TodayList(),
-        },
-        debugShowCheckedModeBanner: false,
+    return MaterialApp(
+      title: 'Todo',
+      theme: ThemeData(
+        primarySwatch: Palette.myColor,
       ),
+      initialRoute: '/',
+      routes: {
+        Homepage.routeName: (ctx) {
+          final countAll = todoList.length;
+          final countToday = todoList
+              .where((todo) =>
+                  todo.dueTime.day == DateTime.now().day && todo.isDone == 0)
+              .length;
+          final countUpcoming = todoList
+              .where((todo) => todo.dueTime.day > DateTime.now().day)
+              .toList()
+              .length;
+          return Homepage(
+            countAll: countAll,
+            countToday: countToday,
+            countUpcoming: countUpcoming,
+            addTodoHandler: addTodoHandler,
+            isLoading: isLoading,
+          );
+        },
+        TodayList.routeName: (ctx) {
+          final todayList = todoList
+              .where((todo) =>
+                  todo.dueTime.day == DateTime.now().day && todo.isDone == 0)
+              .toList();
+          return TodayList(
+            todayTodoList: todayList,
+            addTodoHandler: addTodoHandler,
+            markTodoHandler: markTodoHandler,
+          );
+        },
+      },
+      debugShowCheckedModeBanner: false,
     );
   }
 }

@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:todo_app/dto/todo_dto.dart';
-import 'package:todo_app/provider/todo_provider.dart';
-import 'package:todo_app/widgets/datetime_badge.dart';
 import 'package:intl/intl.dart';
 
+import 'package:todo_app/dto/todo_dto.dart';
+
+import 'package:todo_app/widgets/datetime_badge.dart';
+
 class AddTodo extends StatefulWidget {
-  const AddTodo({Key? key}) : super(key: key);
+  final Function(TodoDTO) addTodoHandler;
+
+  const AddTodo({Key? key, required this.addTodoHandler}) : super(key: key);
 
   @override
   State<AddTodo> createState() => _AddTodoState();
@@ -15,6 +17,7 @@ class AddTodo extends StatefulWidget {
 class _AddTodoState extends State<AddTodo> {
   String _datePicked = '';
   String _title = '';
+  final titleController = TextEditingController();
   bool _isValid = false;
 
   Future _startDatePicker(BuildContext context) async {
@@ -38,17 +41,16 @@ class _AddTodoState extends State<AddTodo> {
     setState(() {
       _datePicked =
           DateFormat('MMM dd yyyy').format(selectedDate) + ' ' + timeString;
-      _isValid = checkValidTodo();
+      _isValid = _checkValidTodo();
     });
   }
 
-  bool checkValidTodo() {
+  bool _checkValidTodo() {
     return _datePicked.isNotEmpty && _title.trim().isNotEmpty;
   }
 
-  void _addTodoHandler(TodoProvider todoProvider) async {
+  void _addTodoHandler() async {
     var choosenDate = DateFormat('MMM dd yyyy HH:mm').parse(_datePicked);
-    // var title = _title;
 
     final todoItem = TodoDTO(
         id: DateTime.now().toIso8601String(),
@@ -56,18 +58,18 @@ class _AddTodoState extends State<AddTodo> {
         dueTime: choosenDate,
         isDone: 0);
 
-    await todoProvider.addTodo(todoItem);
+    widget.addTodoHandler(todoItem);
 
     setState(() {
       _datePicked = '';
       _title = '';
+      titleController.text = _title;
+      _isValid = _checkValidTodo();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final todoProvider = Provider.of<TodoProvider>(context, listen: false);
-
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15),
       child: Column(
@@ -79,10 +81,11 @@ class _AddTodoState extends State<AddTodo> {
             decoration: const InputDecoration(
               hintText: 'e.g. Family lunch on Sunday at noon',
             ),
+            controller: titleController,
             onChanged: (value) {
               setState(() {
                 _title = value;
-                _isValid = checkValidTodo();
+                _isValid = _checkValidTodo();
               });
             },
           ),
@@ -135,8 +138,7 @@ class _AddTodoState extends State<AddTodo> {
                           : Colors.grey,
                       borderRadius: BorderRadius.circular(50)),
                   child: InkWell(
-                    onTap:
-                        _isValid ? () => _addTodoHandler(todoProvider) : null,
+                    onTap: _isValid ? () => _addTodoHandler() : null,
                     borderRadius: BorderRadius.circular(50),
                     splashColor: Colors.grey,
                     child: const Padding(

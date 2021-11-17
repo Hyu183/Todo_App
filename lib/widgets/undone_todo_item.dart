@@ -2,20 +2,20 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
-import 'package:todo_app/provider/todo_provider.dart';
 
 class UndoneTodoItem extends StatefulWidget {
   final String id;
   final String title;
 //   final String description;
   final DateTime time;
+  final Function(String) markTodoHandler;
   const UndoneTodoItem({
     Key? key,
     required this.title,
     // required this.description,
     required this.time,
     required this.id,
+    required this.markTodoHandler,
   }) : super(key: key);
 
   @override
@@ -29,12 +29,12 @@ class _UndoneTodoItemState extends State<UndoneTodoItem> {
     return false;
   }
 
-  void _onTapHandler(BuildContext context) async {
-    final todoProvider = Provider.of<TodoProvider>(context, listen: false);
+  void _onTapHandler(BuildContext context) {
     setState(() {
       isChecked = true;
     });
-    await todoProvider.markAsDone(widget.id);
+
+    widget.markTodoHandler(widget.id);
   }
 
   @override
