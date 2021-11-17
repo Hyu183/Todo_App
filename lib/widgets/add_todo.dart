@@ -14,7 +14,8 @@ class AddTodo extends StatefulWidget {
 
 class _AddTodoState extends State<AddTodo> {
   String _datePicked = '';
-  final _titleController = TextEditingController();
+  String _title = '';
+  bool _isValid = false;
 
   Future _startDatePicker(BuildContext context) async {
     final selectedDate = await showDatePicker(
@@ -37,28 +38,29 @@ class _AddTodoState extends State<AddTodo> {
     setState(() {
       _datePicked =
           DateFormat('MMM dd yyyy').format(selectedDate) + ' ' + timeString;
+      _isValid = checkValidTodo();
     });
   }
 
-  bool isValidTodo() {
-    return _datePicked.isNotEmpty && _titleController.text.isNotEmpty;
+  bool checkValidTodo() {
+    return _datePicked.isNotEmpty && _title.trim().isNotEmpty;
   }
 
   void _addTodoHandler(TodoProvider todoProvider) async {
     var choosenDate = DateFormat('MMM dd yyyy HH:mm').parse(_datePicked);
-    var title = _titleController.text;
+    // var title = _title;
 
     final todoItem = TodoDTO(
         id: DateTime.now().toIso8601String(),
-        title: title,
+        title: _title,
         dueTime: choosenDate,
         isDone: 0);
 
     await todoProvider.addTodo(todoItem);
 
-    _titleController.text = '';
     setState(() {
       _datePicked = '';
+      _title = '';
     });
   }
 
@@ -74,10 +76,15 @@ class _AddTodoState extends State<AddTodo> {
         children: [
           TextField(
             style: const TextStyle(fontSize: 18),
-            controller: _titleController,
             decoration: const InputDecoration(
               hintText: 'e.g. Family lunch on Sunday at noon',
             ),
+            onChanged: (value) {
+              setState(() {
+                _title = value;
+                _isValid = checkValidTodo();
+              });
+            },
           ),
           const SizedBox(
             height: 10,
@@ -123,14 +130,13 @@ class _AddTodoState extends State<AddTodo> {
               ),
               Container(
                   decoration: BoxDecoration(
-                      color: isValidTodo()
+                      color: _isValid
                           ? Theme.of(context).primaryColor
                           : Colors.grey,
                       borderRadius: BorderRadius.circular(50)),
                   child: InkWell(
-                    onTap: isValidTodo()
-                        ? () => _addTodoHandler(todoProvider)
-                        : null,
+                    onTap:
+                        _isValid ? () => _addTodoHandler(todoProvider) : null,
                     borderRadius: BorderRadius.circular(50),
                     splashColor: Colors.grey,
                     child: const Padding(
