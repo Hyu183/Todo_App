@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
 class CategoryTile extends StatelessWidget {
+  final String iconUrl;
   final String title;
-  final IconData iconData;
   final VoidCallback onTapHandler;
   final int count;
 
   const CategoryTile({
     Key? key,
     required this.title,
-    required this.iconData,
     required this.onTapHandler,
     required this.count,
+    required this.iconUrl,
   }) : super(key: key);
 
   @override
@@ -21,7 +21,11 @@ class CategoryTile extends StatelessWidget {
       splashColor: Theme.of(context).primaryColor.withOpacity(0.8),
       onTap: onTapHandler,
       child: ListTile(
-        leading: Icon(iconData),
+        leading: Image(
+          image: AssetImage(iconUrl),
+          height: 30,
+          width: 30,
+        ),
         title: Text(title),
         trailing: Text(
           '$count',

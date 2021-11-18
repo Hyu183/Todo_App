@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:todo_app/config/palette.dart';
 import 'package:todo_app/dao/todo_dao.dart';
 import 'package:todo_app/dto/todo_dto.dart';
+import 'package:todo_app/pages/all_list.dart';
 
 import 'package:todo_app/pages/homepage.dart';
+import 'package:todo_app/pages/search.dart';
 import 'package:todo_app/pages/today_list.dart';
+import 'package:todo_app/pages/upcoming_list.dart';
 
 void main() {
   runApp(const MyApp());
@@ -26,7 +29,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     // TODO: implement initState
-    print('init');
     super.initState();
     loadData();
   }
@@ -74,7 +76,8 @@ class _MyAppState extends State<MyApp> {
                   todo.dueTime.day == DateTime.now().day && todo.isDone == 0)
               .length;
           final countUpcoming = todoList
-              .where((todo) => todo.dueTime.day > DateTime.now().day)
+              .where((todo) =>
+                  todo.dueTime.day > DateTime.now().day && todo.isDone == 0)
               .toList()
               .length;
           return Homepage(
@@ -95,6 +98,23 @@ class _MyAppState extends State<MyApp> {
             addTodoHandler: addTodoHandler,
             markTodoHandler: markTodoHandler,
           );
+        },
+        AllList.routeName: (ctx) => AllList(
+            allTodoList: todoList,
+            markTodoHandler: markTodoHandler,
+            addTodoHandler: addTodoHandler),
+        UpcomingList.routeName: (ctx) {
+          final upcomingTodoList = todoList
+              .where((todo) =>
+                  todo.dueTime.day > DateTime.now().day && todo.isDone == 0)
+              .toList();
+          return UpcomingList(
+              upcomingTodoList: upcomingTodoList,
+              addTodoHandler: addTodoHandler,
+              markTodoHandler: markTodoHandler);
+        },
+        Search.routeName: (ctx) {
+          return Search();
         },
       },
       debugShowCheckedModeBanner: false,

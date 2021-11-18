@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
-
 import 'package:todo_app/dto/todo_dto.dart';
-
 import 'package:todo_app/widgets/add_todo.dart';
+import 'package:todo_app/widgets/done_todo_item.dart';
 import 'package:todo_app/widgets/empty_list.dart';
-import 'package:todo_app/widgets/header_time.dart';
 import 'package:todo_app/widgets/undone_todo_item.dart';
 
-class TodayList extends StatelessWidget {
-  static const routeName = '/today';
-  final List<TodoDTO> todayTodoList;
+class AllList extends StatelessWidget {
+  static const routeName = '/all';
+  final List<TodoDTO> allTodoList;
   final Function(TodoDTO) addTodoHandler;
   final Function(String) markTodoHandler;
-  const TodayList(
+  const AllList(
       {Key? key,
-      required this.todayTodoList,
-      required this.addTodoHandler,
-      required this.markTodoHandler})
+      required this.allTodoList,
+      required this.markTodoHandler,
+      required this.addTodoHandler})
       : super(key: key);
 
   @override
@@ -24,7 +22,7 @@ class TodayList extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: const Text('Today'),
+        title: const Text('All'),
         leading: IconButton(
           onPressed: () {
             Navigator.of(context).pop();
@@ -46,27 +44,29 @@ class TodayList extends StatelessWidget {
           ),
         ],
       ),
-      body: todayTodoList.isEmpty
+      body: allTodoList.isEmpty
           ? const EmptyList()
           : SingleChildScrollView(
               child: Column(
-                children: [
-                  HeaderTime(
-                    datetime: DateTime.now(),
-                  ),
-                  Column(
-                    children: todayTodoList
-                        .map((todo) => UndoneTodoItem(
-                              key: ValueKey(todo.id),
-                              id: todo.id,
-                              title: todo.title,
-                              time: todo.dueTime,
-                              markTodoHandler: markTodoHandler,
-                              seeDetailDate: false,
-                            ))
-                        .toList(),
-                  ),
-                ],
+                children: allTodoList.map((todo) {
+                  if (todo.isDone == 0) {
+                    return UndoneTodoItem(
+                      key: ValueKey(todo.id),
+                      id: todo.id,
+                      title: todo.title,
+                      time: todo.dueTime,
+                      markTodoHandler: markTodoHandler,
+                      seeDetailDate: true,
+                    );
+                  } else {
+                    return DoneTodoItem(
+                      key: ValueKey(todo.id),
+                      id: todo.id,
+                      title: todo.title,
+                      time: todo.dueTime,
+                    );
+                  }
+                }).toList(),
               ),
             ),
       floatingActionButton: FloatingActionButton(

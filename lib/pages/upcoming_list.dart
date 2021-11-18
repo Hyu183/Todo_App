@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
-
 import 'package:todo_app/dto/todo_dto.dart';
-
 import 'package:todo_app/widgets/add_todo.dart';
 import 'package:todo_app/widgets/empty_list.dart';
-import 'package:todo_app/widgets/header_time.dart';
-import 'package:todo_app/widgets/undone_todo_item.dart';
+import 'package:todo_app/widgets/upcoming_todo_item.dart';
 
-class TodayList extends StatelessWidget {
-  static const routeName = '/today';
-  final List<TodoDTO> todayTodoList;
+class UpcomingList extends StatelessWidget {
+  static const routeName = '/upcoming';
+  final List<TodoDTO> upcomingTodoList;
   final Function(TodoDTO) addTodoHandler;
   final Function(String) markTodoHandler;
-  const TodayList(
+  const UpcomingList(
       {Key? key,
-      required this.todayTodoList,
+      required this.upcomingTodoList,
       required this.addTodoHandler,
       required this.markTodoHandler})
       : super(key: key);
@@ -24,7 +21,7 @@ class TodayList extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: const Text('Today'),
+        title: const Text('Upcoming'),
         leading: IconButton(
           onPressed: () {
             Navigator.of(context).pop();
@@ -46,27 +43,17 @@ class TodayList extends StatelessWidget {
           ),
         ],
       ),
-      body: todayTodoList.isEmpty
+      body: upcomingTodoList.isEmpty
           ? const EmptyList()
           : SingleChildScrollView(
               child: Column(
-                children: [
-                  HeaderTime(
-                    datetime: DateTime.now(),
-                  ),
-                  Column(
-                    children: todayTodoList
-                        .map((todo) => UndoneTodoItem(
-                              key: ValueKey(todo.id),
-                              id: todo.id,
-                              title: todo.title,
-                              time: todo.dueTime,
-                              markTodoHandler: markTodoHandler,
-                              seeDetailDate: false,
-                            ))
-                        .toList(),
-                  ),
-                ],
+                children: upcomingTodoList
+                    .map((todo) => UpcomingTodoItem(
+                        title: todo.title,
+                        time: todo.dueTime,
+                        id: todo.id,
+                        markTodoHandler: markTodoHandler))
+                    .toList(),
               ),
             ),
       floatingActionButton: FloatingActionButton(

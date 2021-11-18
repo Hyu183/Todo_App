@@ -1,32 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class UndoneTodoItem extends StatefulWidget {
+class UpcomingTodoItem extends StatefulWidget {
   final String id;
   final String title;
 
   final DateTime time;
   final Function(String) markTodoHandler;
-  final bool seeDetailDate;
-  const UndoneTodoItem({
+  const UpcomingTodoItem({
     Key? key,
     required this.title,
     required this.time,
     required this.id,
     required this.markTodoHandler,
-    required this.seeDetailDate,
   }) : super(key: key);
 
   @override
-  State<UndoneTodoItem> createState() => _UndoneTodoItemState();
+  State<UpcomingTodoItem> createState() => _UpcomingTodoItemState();
 }
 
-class _UndoneTodoItemState extends State<UndoneTodoItem> {
+class _UpcomingTodoItemState extends State<UpcomingTodoItem> {
   var isChecked = false;
-  bool _checkIsDue() {
-    if (widget.time.isBefore(DateTime.now())) return true;
-    return false;
-  }
 
   void _onTapHandler() {
     setState(() {
@@ -68,22 +62,15 @@ class _UndoneTodoItemState extends State<UndoneTodoItem> {
                 ),
                 Row(
                   children: [
-                    Icon(Icons.calendar_today,
-                        color: _checkIsDue()
-                            ? Theme.of(context).primaryColor
-                            : Colors.green,
-                        size: 15),
+                    const Icon(Icons.calendar_today,
+                        color: Colors.green, size: 15),
                     const SizedBox(
                       width: 5,
                     ),
                     Text(
-                      widget.seeDetailDate
-                          ? DateFormat('MMM dd yyyy HH:mm').format(widget.time)
-                          : DateFormat('HH:mm').format(widget.time),
-                      style: TextStyle(
-                        color: _checkIsDue()
-                            ? Theme.of(context).primaryColor
-                            : Colors.green,
+                      DateFormat('MMM dd yyyy HH:mm').format(widget.time),
+                      style: const TextStyle(
+                        color: Colors.green,
                       ),
                     ),
                   ],

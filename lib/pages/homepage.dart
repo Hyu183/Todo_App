@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'package:todo_app/dto/todo_dto.dart';
+import 'package:todo_app/pages/all_list.dart';
+import 'package:todo_app/pages/search.dart';
 
 import 'package:todo_app/pages/today_list.dart';
+import 'package:todo_app/pages/upcoming_list.dart';
 
 import 'package:todo_app/widgets/add_todo.dart';
 import 'package:todo_app/widgets/category_tile.dart';
@@ -30,7 +33,9 @@ class Homepage extends StatelessWidget {
         elevation: 0,
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).pushNamed(Search.routeName);
+            },
             icon: const Icon(
               Icons.search_rounded,
             ),
@@ -50,7 +55,7 @@ class Homepage extends StatelessWidget {
         ],
       ),
       body: isLoading
-          ? Center(
+          ? const Center(
               child: CircularProgressIndicator(),
             )
           : Container(
@@ -68,33 +73,43 @@ class Homepage extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         CategoryTile(
-                            title: 'All',
-                            iconData: Icons.access_alarm,
-                            onTapHandler: () {},
-                            count: countAll),
+                          title: 'All',
+                          // iconData: Icons.access_alarm,
+                          onTapHandler: () {
+                            Navigator.of(context).pushNamed(AllList.routeName);
+                          },
+                          count: countAll, iconUrl: 'inbox.png',
+                        ),
                         const Divider(
                           color: Colors.grey,
                           thickness: 1,
                           indent: 60,
                         ),
                         CategoryTile(
-                            title: 'Today',
-                            iconData: Icons.access_alarm,
-                            onTapHandler: () {
-                              Navigator.of(context)
-                                  .pushNamed(TodayList.routeName);
-                            },
-                            count: countToday),
+                          title: 'Today',
+                          //   iconData: Icons.access_alarm,
+                          onTapHandler: () {
+                            Navigator.of(context)
+                                .pushNamed(TodayList.routeName);
+                          },
+                          count: countToday,
+                          iconUrl: 'today.png',
+                        ),
                         const Divider(
                           color: Colors.grey,
                           thickness: 1,
                           indent: 60,
                         ),
                         CategoryTile(
-                            title: 'Upcoming',
-                            iconData: Icons.access_alarm,
-                            onTapHandler: () {},
-                            count: countUpcoming),
+                          title: 'Upcoming',
+                          //   iconData: Icons.access_alarm,
+                          onTapHandler: () {
+                            Navigator.of(context)
+                                .pushNamed(UpcomingList.routeName);
+                          },
+                          count: countUpcoming,
+                          iconUrl: 'upcoming.png',
+                        ),
                       ],
                     ),
                   ),
