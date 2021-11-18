@@ -114,7 +114,10 @@ class _MyAppState extends State<MyApp> {
               markTodoHandler: markTodoHandler);
         },
         Search.routeName: (ctx) {
-          return Search();
+          return Search(
+            todoList: todoList,
+            markTodoHandler: markTodoHandler,
+          );
         },
       },
       debugShowCheckedModeBanner: false,

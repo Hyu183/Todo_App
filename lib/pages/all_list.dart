@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/dto/todo_dto.dart';
+import 'package:todo_app/pages/search.dart';
 import 'package:todo_app/widgets/add_todo.dart';
 import 'package:todo_app/widgets/done_todo_item.dart';
 import 'package:todo_app/widgets/empty_list.dart';
@@ -31,7 +32,9 @@ class AllList extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).pushNamed(Search.routeName);
+            },
             icon: const Icon(
               Icons.search_rounded,
             ),

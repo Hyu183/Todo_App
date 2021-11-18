@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/dto/todo_dto.dart';
+import 'package:todo_app/pages/search.dart';
 import 'package:todo_app/widgets/add_todo.dart';
 import 'package:todo_app/widgets/empty_list.dart';
 import 'package:todo_app/widgets/upcoming_todo_item.dart';
@@ -30,15 +31,11 @@ class UpcomingList extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).pushNamed(Search.routeName);
+            },
             icon: const Icon(
               Icons.search_rounded,
-            ),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.more_horiz_rounded,
             ),
           ),
         ],

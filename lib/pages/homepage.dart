@@ -46,12 +46,6 @@ class Homepage extends StatelessWidget {
               Icons.notifications_none_outlined,
             ),
           ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.settings_outlined,
-            ),
-          )
         ],
       ),
       body: isLoading
@@ -74,11 +68,11 @@ class Homepage extends StatelessWidget {
                       children: [
                         CategoryTile(
                           title: 'All',
-                          // iconData: Icons.access_alarm,
                           onTapHandler: () {
                             Navigator.of(context).pushNamed(AllList.routeName);
                           },
-                          count: countAll, iconUrl: 'inbox.png',
+                          count: countAll,
+                          iconUrl: 'inbox.png',
                         ),
                         const Divider(
                           color: Colors.grey,
@@ -87,7 +81,6 @@ class Homepage extends StatelessWidget {
                         ),
                         CategoryTile(
                           title: 'Today',
-                          //   iconData: Icons.access_alarm,
                           onTapHandler: () {
                             Navigator.of(context)
                                 .pushNamed(TodayList.routeName);
@@ -102,7 +95,6 @@ class Homepage extends StatelessWidget {
                         ),
                         CategoryTile(
                           title: 'Upcoming',
-                          //   iconData: Icons.access_alarm,
                           onTapHandler: () {
                             Navigator.of(context)
                                 .pushNamed(UpcomingList.routeName);
