@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import 'package:todo_app/dto/todo_dto.dart';
+import 'package:todo_app/service/notification.dart';
 
 import 'package:todo_app/widgets/datetime_badge.dart';
 
@@ -58,8 +59,17 @@ class _AddTodoState extends State<AddTodo> {
         dueTime: choosenDate,
         isDone: 0);
 
-    widget.addTodoHandler(todoItem);
+    await widget.addTodoHandler(todoItem);
 
+    if (choosenDate
+        .subtract(const Duration(minutes: 10))
+        .isAfter(DateTime.now())) {
+      await NotificationService.showScheduledNotification(
+          id: choosenDate.millisecond,
+          title: _title,
+          body: DateFormat('HH:mm').format(choosenDate),
+          scheduledDate: choosenDate.subtract(const Duration(minutes: 10)));
+    }
     setState(() {
       _datePicked = '';
       _title = '';

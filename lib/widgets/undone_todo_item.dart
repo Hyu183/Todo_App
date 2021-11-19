@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:todo_app/service/notification.dart';
 
 class UndoneTodoItem extends StatefulWidget {
   final String id;
@@ -28,12 +29,12 @@ class _UndoneTodoItemState extends State<UndoneTodoItem> {
     return false;
   }
 
-  void _onTapHandler() {
+  void _onTapHandler() async {
     setState(() {
       isChecked = true;
     });
-
-    widget.markTodoHandler(widget.id);
+    await widget.markTodoHandler(widget.id);
+    await NotificationService.notifications.cancel(widget.time.millisecond);
   }
 
   @override

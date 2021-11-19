@@ -16,15 +16,16 @@ class Homepage extends StatelessWidget {
   final int countToday;
   final int countUpcoming;
   final Function(TodoDTO) addTodoHandler;
+
   final bool isLoading;
-  const Homepage(
-      {Key? key,
-      required this.countAll,
-      required this.countToday,
-      required this.countUpcoming,
-      required this.addTodoHandler,
-      required this.isLoading})
-      : super(key: key);
+  const Homepage({
+    Key? key,
+    required this.countAll,
+    required this.countToday,
+    required this.countUpcoming,
+    required this.addTodoHandler,
+    required this.isLoading,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,12 +39,6 @@ class Homepage extends StatelessWidget {
             },
             icon: const Icon(
               Icons.search_rounded,
-            ),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.notifications_none_outlined,
             ),
           ),
         ],

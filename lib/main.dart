@@ -9,8 +9,12 @@ import 'package:todo_app/pages/homepage.dart';
 import 'package:todo_app/pages/search.dart';
 import 'package:todo_app/pages/today_list.dart';
 import 'package:todo_app/pages/upcoming_list.dart';
+import 'package:todo_app/service/notification.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await NotificationService.init();
+  await NotificationService.resolvePlatform();
   runApp(const MyApp());
 }
 
@@ -46,6 +50,13 @@ class _MyAppState extends State<MyApp> {
       todoList.add(todo);
     });
     await todoDAO.insertTodo(todo);
+  }
+
+  void clearAllTodoHandler() async {
+    setState(() {
+      todoList = [];
+    });
+    await todoDAO.deleteAllTodo();
   }
 
   void markTodoHandler(String id) async {
@@ -100,9 +111,11 @@ class _MyAppState extends State<MyApp> {
           );
         },
         AllList.routeName: (ctx) => AllList(
-            allTodoList: todoList,
-            markTodoHandler: markTodoHandler,
-            addTodoHandler: addTodoHandler),
+              allTodoList: todoList,
+              markTodoHandler: markTodoHandler,
+              addTodoHandler: addTodoHandler,
+              clearAllTodoHandler: clearAllTodoHandler,
+            ),
         UpcomingList.routeName: (ctx) {
           final upcomingTodoList = todoList
               .where((todo) =>

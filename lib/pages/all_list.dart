@@ -11,11 +11,13 @@ class AllList extends StatelessWidget {
   final List<TodoDTO> allTodoList;
   final Function(TodoDTO) addTodoHandler;
   final Function(String) markTodoHandler;
+  final VoidCallback clearAllTodoHandler;
   const AllList(
       {Key? key,
       required this.allTodoList,
       required this.markTodoHandler,
-      required this.addTodoHandler})
+      required this.addTodoHandler,
+      required this.clearAllTodoHandler})
       : super(key: key);
 
   @override
@@ -39,12 +41,13 @@ class AllList extends StatelessWidget {
               Icons.search_rounded,
             ),
           ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.more_horiz_rounded,
-            ),
-          ),
+          PopupMenuButton(
+              itemBuilder: (ctx) => [
+                    PopupMenuItem(
+                      child: const Text('Clear All'),
+                      onTap: clearAllTodoHandler,
+                    )
+                  ]),
         ],
       ),
       body: allTodoList.isEmpty
