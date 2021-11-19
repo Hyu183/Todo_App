@@ -3,11 +3,11 @@ import 'package:intl/intl.dart';
 import 'package:todo_app/service/notification.dart';
 
 class UndoneTodoItem extends StatefulWidget {
-  final String id;
+  final int id;
   final String title;
 
   final DateTime time;
-  final Function(String) markTodoHandler;
+  final Function(int) markTodoHandler;
   final bool seeDetailDate;
   const UndoneTodoItem({
     Key? key,
@@ -34,7 +34,7 @@ class _UndoneTodoItemState extends State<UndoneTodoItem> {
       isChecked = true;
     });
     await widget.markTodoHandler(widget.id);
-    await NotificationService.notifications.cancel(widget.time.millisecond);
+    await NotificationService.notifications.cancel(widget.id);
   }
 
   @override

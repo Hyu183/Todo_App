@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class DoneTodoItem extends StatelessWidget {
-  final String id;
+  final int id;
   final String title;
   final DateTime time;
 

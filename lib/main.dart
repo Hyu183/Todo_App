@@ -45,11 +45,14 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  void addTodoHandler(TodoDTO todo) async {
+  Future<int> addTodoHandler(TodoDTO todo) async {
+    int id = await todoDAO.insertTodo(todo);
+    TodoDTO todoWithNewID = TodoDTO(
+        id: id, title: todo.title, dueTime: todo.dueTime, isDone: todo.isDone);
     setState(() {
-      todoList.add(todo);
+      todoList.add(todoWithNewID);
     });
-    await todoDAO.insertTodo(todo);
+    return id;
   }
 
   void clearAllTodoHandler() async {
@@ -59,7 +62,7 @@ class _MyAppState extends State<MyApp> {
     await todoDAO.deleteAllTodo();
   }
 
-  void markTodoHandler(String id) async {
+  void markTodoHandler(int id) async {
     int oldTodoIndex = todoList.indexWhere((todo) => todo.id == id);
     setState(() {
       todoList[oldTodoIndex] = TodoDTO(
@@ -108,6 +111,7 @@ class _MyAppState extends State<MyApp> {
             todayTodoList: todayList,
             addTodoHandler: addTodoHandler,
             markTodoHandler: markTodoHandler,
+            countAll: todoList.length,
           );
         },
         AllList.routeName: (ctx) => AllList(
@@ -122,9 +126,11 @@ class _MyAppState extends State<MyApp> {
                   todo.dueTime.day > DateTime.now().day && todo.isDone == 0)
               .toList();
           return UpcomingList(
-              upcomingTodoList: upcomingTodoList,
-              addTodoHandler: addTodoHandler,
-              markTodoHandler: markTodoHandler);
+            upcomingTodoList: upcomingTodoList,
+            addTodoHandler: addTodoHandler,
+            markTodoHandler: markTodoHandler,
+            countAll: todoList.length,
+          );
         },
         Search.routeName: (ctx) {
           return Search(

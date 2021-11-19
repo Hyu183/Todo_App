@@ -12,13 +12,15 @@ class TodayList extends StatelessWidget {
   static const routeName = '/today';
   final List<TodoDTO> todayTodoList;
   final Function(TodoDTO) addTodoHandler;
-  final Function(String) markTodoHandler;
-  const TodayList(
-      {Key? key,
-      required this.todayTodoList,
-      required this.addTodoHandler,
-      required this.markTodoHandler})
-      : super(key: key);
+  final Function(int) markTodoHandler;
+  final int countAll;
+  const TodayList({
+    Key? key,
+    required this.todayTodoList,
+    required this.addTodoHandler,
+    required this.markTodoHandler,
+    required this.countAll,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -52,16 +54,16 @@ class TodayList extends StatelessWidget {
                     datetime: DateTime.now(),
                   ),
                   Column(
-                    children: todayTodoList
-                        .map((todo) => UndoneTodoItem(
-                              key: ValueKey(todo.id),
-                              id: todo.id,
-                              title: todo.title,
-                              time: todo.dueTime,
-                              markTodoHandler: markTodoHandler,
-                              seeDetailDate: false,
-                            ))
-                        .toList(),
+                    children: todayTodoList.map((todo) {
+                      return UndoneTodoItem(
+                        key: ValueKey(todo.id),
+                        id: todo.id,
+                        title: todo.title,
+                        time: todo.dueTime,
+                        markTodoHandler: markTodoHandler,
+                        seeDetailDate: false,
+                      );
+                    }).toList(),
                   ),
                 ],
               ),
@@ -80,7 +82,10 @@ class TodayList extends StatelessWidget {
             return Padding(
               padding:
                   EdgeInsets.only(bottom: MediaQuery.of(ctx).viewInsets.bottom),
-              child: AddTodo(addTodoHandler: addTodoHandler),
+              child: AddTodo(
+                addTodoHandler: addTodoHandler,
+                countAll: countAll,
+              ),
             );
           },
         ),

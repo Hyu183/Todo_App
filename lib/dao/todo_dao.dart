@@ -10,7 +10,7 @@ const String columnDone = 'isDone';
 
 class TodoDAO {
   Database? database;
-  final databaseName = 'todo.db';
+  final databaseName = 'my_todo.db';
   Future<void> open(String databaseName) async {
     database = await openDatabase(
       join(
@@ -20,20 +20,22 @@ class TodoDAO {
       version: 1,
       onCreate: (Database db, int version) async {
         await db.execute(
-          'CREATE TABLE IF NOT EXISTS Todo ( id text PRIMARY KEY, title text, dueTime text, isDone integer )',
+          'CREATE TABLE IF NOT EXISTS Todo ( id integer PRIMARY KEY AUTOINCREMENT, title text, dueTime text, isDone integer )',
         );
       },
     );
   }
 
-  Future<void> insertTodo(TodoDTO todo) async {
+  Future<int> insertTodo(TodoDTO todo) async {
     await open(databaseName);
-    await database?.insert(
+    int? id = await database?.insert(
       'Todo',
       todo.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
     await close();
+
+    return id!;
   }
 
   Future<List<TodoDTO>> getTodo() async {
@@ -50,7 +52,7 @@ class TodoDAO {
             isDone: maps[index][columnDone]));
   }
 
-  Future<void> markAsDone(String id) async {
+  Future<void> markAsDone(int id) async {
     await open(databaseName);
     await database?.rawUpdate(
         'UPDATE $tableTodo SET $columnDone = ? WHERE $columnId = ?', [1, id]);

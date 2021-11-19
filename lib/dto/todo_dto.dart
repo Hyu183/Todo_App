@@ -1,5 +1,5 @@
 class TodoDTO {
-  final String id;
+  final int id;
   final String title;
   final DateTime dueTime;
 //   final String description;
@@ -15,7 +15,6 @@ class TodoDTO {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
       'title': title,
       'dueTime': dueTime.toIso8601String().replaceFirst('T', ' '),
       'isDone': isDone,

@@ -10,7 +10,7 @@ class AllList extends StatelessWidget {
   static const routeName = '/all';
   final List<TodoDTO> allTodoList;
   final Function(TodoDTO) addTodoHandler;
-  final Function(String) markTodoHandler;
+  final Function(int) markTodoHandler;
   final VoidCallback clearAllTodoHandler;
   const AllList(
       {Key? key,
@@ -89,7 +89,10 @@ class AllList extends StatelessWidget {
             return Padding(
               padding:
                   EdgeInsets.only(bottom: MediaQuery.of(ctx).viewInsets.bottom),
-              child: AddTodo(addTodoHandler: addTodoHandler),
+              child: AddTodo(
+                addTodoHandler: addTodoHandler,
+                countAll: allTodoList.length,
+              ),
             );
           },
         ),

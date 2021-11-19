@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class UpcomingTodoItem extends StatefulWidget {
-  final String id;
+  final int id;
   final String title;
 
   final DateTime time;
-  final Function(String) markTodoHandler;
+  final Function(int) markTodoHandler;
   const UpcomingTodoItem({
     Key? key,
     required this.title,

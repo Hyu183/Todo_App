@@ -9,12 +9,14 @@ class UpcomingList extends StatelessWidget {
   static const routeName = '/upcoming';
   final List<TodoDTO> upcomingTodoList;
   final Function(TodoDTO) addTodoHandler;
-  final Function(String) markTodoHandler;
+  final Function(int) markTodoHandler;
+  final int countAll;
   const UpcomingList(
       {Key? key,
       required this.upcomingTodoList,
       required this.addTodoHandler,
-      required this.markTodoHandler})
+      required this.markTodoHandler,
+      required this.countAll})
       : super(key: key);
 
   @override
@@ -67,7 +69,10 @@ class UpcomingList extends StatelessWidget {
             return Padding(
               padding:
                   EdgeInsets.only(bottom: MediaQuery.of(ctx).viewInsets.bottom),
-              child: AddTodo(addTodoHandler: addTodoHandler),
+              child: AddTodo(
+                addTodoHandler: addTodoHandler,
+                countAll: countAll,
+              ),
             );
           },
         ),

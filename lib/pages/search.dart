@@ -9,7 +9,7 @@ import 'package:woozy_search/woozy_search.dart';
 class Search extends StatefulWidget {
   static const routeName = '/search';
   final List<TodoDTO> todoList;
-  final Function(String) markTodoHandler;
+  final Function(int) markTodoHandler;
   const Search(
       {Key? key, required this.todoList, required this.markTodoHandler})
       : super(key: key);

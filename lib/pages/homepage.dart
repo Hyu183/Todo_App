@@ -119,6 +119,7 @@ class Homepage extends StatelessWidget {
                   EdgeInsets.only(bottom: MediaQuery.of(ctx).viewInsets.bottom),
               child: AddTodo(
                 addTodoHandler: addTodoHandler,
+                countAll: countAll,
               ),
             );
           },

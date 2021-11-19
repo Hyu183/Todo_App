@@ -8,8 +8,11 @@ import 'package:todo_app/widgets/datetime_badge.dart';
 
 class AddTodo extends StatefulWidget {
   final Function(TodoDTO) addTodoHandler;
+  final int countAll;
 
-  const AddTodo({Key? key, required this.addTodoHandler}) : super(key: key);
+  const AddTodo(
+      {Key? key, required this.addTodoHandler, required this.countAll})
+      : super(key: key);
 
   @override
   State<AddTodo> createState() => _AddTodoState();
@@ -53,22 +56,19 @@ class _AddTodoState extends State<AddTodo> {
   void _addTodoHandler() async {
     var choosenDate = DateFormat('MMM dd yyyy HH:mm').parse(_datePicked);
 
-    final todoItem = TodoDTO(
-        id: DateTime.now().toIso8601String(),
-        title: _title,
-        dueTime: choosenDate,
-        isDone: 0);
+    final todoItem =
+        TodoDTO(id: 0, title: _title, dueTime: choosenDate, isDone: 0);
 
-    await widget.addTodoHandler(todoItem);
+    int id = await widget.addTodoHandler(todoItem);
 
     if (choosenDate
-        .subtract(const Duration(minutes: 10))
+        .subtract(const Duration(seconds: 10))
         .isAfter(DateTime.now())) {
       await NotificationService.showScheduledNotification(
-          id: choosenDate.millisecond,
+          id: id,
           title: _title,
           body: DateFormat('HH:mm').format(choosenDate),
-          scheduledDate: choosenDate.subtract(const Duration(minutes: 10)));
+          scheduledDate: choosenDate.subtract(const Duration(seconds: 10)));
     }
     setState(() {
       _datePicked = '';
